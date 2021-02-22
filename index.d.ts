@@ -1,8 +1,10 @@
+import { Request, Handler } from "express";
+import { Context, Middleware } from "koa";
 import { IncomingMessage, ServerResponse } from 'http'
 
-export type RequestIdFactory = (req?: IncomingMessage | any) => unknown
+export type RequestIdFactory<T> = (req: T) => unknown
 
-export interface IOptions {
+export interface IOptions<RequestType = unknown> {
   // Default: false
   echoHeader?: boolean
   // Default: false
@@ -10,7 +12,7 @@ export interface IOptions {
   // Default: 'X-Request-Id'
   headerName?: string
   // Default: UUID v1
-  requestIdFactory?: RequestIdFactory
+  requestIdFactory?: RequestIdFactory<RequestType>
 }
 
 export interface IFastifyOptions {
@@ -23,7 +25,7 @@ export interface IFastifyOptions {
   // Default: false
   useFastifyRequestId?: boolean
   // Default: UUID v1
-  requestIdFactory?: RequestIdFactory
+  requestIdFactory?: RequestIdFactory<unknown>
 }
 
 export interface IHapiPlugin<T> {
@@ -33,12 +35,8 @@ export interface IHapiPlugin<T> {
 }
 
 export declare const expressMiddleware: (
-  options?: IOptions,
-) => (
-  req: IncomingMessage,
-  res: ServerResponse,
-  next: (err?: any) => void,
-) => void
+  options?: IOptions<Request>,
+) => Handler;
 
 export declare const fastifyPlugin: (
   fastify: any,
@@ -55,11 +53,8 @@ export declare const fastifyMiddleware: (
 ) => void
 
 export declare const koaMiddleware: (
-  options?: IOptions,
-) => (
-  ctx: { request: IncomingMessage; response: ServerResponse },
-  next: () => Promise<void>,
-) => Promise<void>
+  options?: IOptions<Context>,
+) => Middleware;
 
 export declare const koaV1Middleware: (
   options?: IOptions,

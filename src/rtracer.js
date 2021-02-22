@@ -137,7 +137,7 @@ const koaMiddleware = ({
     if (useHeader) {
       requestId = ctx.request.headers[headerName.toLowerCase()]
     }
-    requestId = requestId || requestIdFactory(ctx.request)
+    requestId = requestId || requestIdFactory(ctx)
 
     if (echoHeader) {
       ctx.set(headerName, requestId)
